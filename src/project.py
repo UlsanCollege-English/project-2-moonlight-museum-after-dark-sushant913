@@ -39,14 +39,12 @@ class ArtifactBST:
         current = self.root
         while True:
             if artifact.artifact_id == current.artifact.artifact_id:
-                return False  # duplicate
-
+                return False
             elif artifact.artifact_id < current.artifact.artifact_id:
                 if current.left is None:
                     current.left = TreeNode(artifact)
                     return True
                 current = current.left
-
             else:
                 if current.right is None:
                     current.right = TreeNode(artifact)
@@ -161,7 +159,6 @@ class ExhibitRoute:
 
     def add_stop(self, stop_name: str) -> None:
         new_node = ExhibitNode(stop_name)
-
         if self.head is None:
             self.head = new_node
             return
@@ -182,7 +179,6 @@ class ExhibitRoute:
                 else:
                     self.head = current.next
                 return True
-
             prev = current
             current = current.next
 
@@ -191,11 +187,9 @@ class ExhibitRoute:
     def list_stops(self) -> list[str]:
         result = []
         current = self.head
-
         while current:
             result.append(current.stop_name)
             current = current.next
-
         return result
 
     def count_stops(self) -> int:
@@ -231,41 +225,40 @@ def linear_search_by_name(
 
 
 def demo_museum_night() -> None:
+    print("Moonlight Museum After Dark")
+
     bst = ArtifactBST()
 
     artifacts = [
-        Artifact(5, "Mirror", "Cursed", 200, "A"),
-        Artifact(2, "Bird", "Clockwork", 150, "B"),
-        Artifact(8, "Map", "Magic", 300, "C"),
-        Artifact(1, "Key", "Mystic", 100, "A"),
-        Artifact(3, "Lantern", "Light", 80, "D"),
-        Artifact(7, "Book", "Ancient", 500, "E"),
-        Artifact(6, "Mask", "Spirit", 220, "B"),
-        Artifact(4, "Orb", "Magic", 180, "C"),
+        Artifact(40, "Cursed Mirror", "mirror", 220, "North Hall"),
+        Artifact(20, "Clockwork Bird", "machine", 80, "Workshop"),
+        Artifact(60, "Whispering Map", "paper", 140, "Archive"),
+        Artifact(10, "Glowing Key", "metal", 35, "Vault"),
+        Artifact(30, "Moon Dial", "device", 120, "North Hall"),
+        Artifact(50, "Silver Mask", "costume", 160, "Gallery"),
+        Artifact(70, "Lantern Jar", "glass", 60, "Gallery"),
+        Artifact(25, "Ink Compass", "device", 120, "Archive"),
     ]
 
     for a in artifacts:
         bst.insert(a)
 
-    print("Inorder:", bst.inorder_ids())
-    print("Search 3:", bst.search_by_id(3))
-    print("Search 99:", bst.search_by_id(99))
+    print("Inorder IDs:", bst.inorder_ids())
 
     queue = RestorationQueue()
-    queue.add_request(RestorationRequest(1, "Fix mirror"))
-    queue.add_request(RestorationRequest(2, "Repair bird"))
-    print("Processing:", queue.process_next_request())
+    queue.add_request(RestorationRequest(40, "Fix mirror"))
+
+    print("Next restoration request:", queue.peek_next_request())
 
     stack = ArchiveUndoStack()
     stack.push_action("Added artifact")
-    stack.push_action("Removed artifact")
-    print("Undo:", stack.undo_last_action())
+
+    print("Undo action:", stack.undo_last_action())
 
     route = ExhibitRoute()
     route.add_stop("Entrance")
     route.add_stop("Hall A")
-    route.add_stop("Vault")
-    print("Route:", route.list_stops())
 
-    print("Categories:", count_artifacts_by_category(artifacts))
-    print("Rooms:", unique_rooms(artifacts))
+    print("Exhibit route:", route.list_stops())
+
+    print("Category counts:", count_artifacts_by_category(artifacts))
